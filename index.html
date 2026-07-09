@@ -129,6 +129,13 @@
         .input-field:focus {
             border-color: #888;
         }
+        
+        .divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 25px 0;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -215,8 +222,10 @@
                 <input type="text" inputmode="numeric" class="input-field" id="inSatisFiyati" value="34">
             </div>
             
+            <div class="divider"></div>
+
             <div class="input-group">
-                <div class="input-label">1. Maliyet Faturası (16 TL)</div>
+                <div class="input-label">1. Maliyet Faturası (TL)</div>
                 <input type="text" inputmode="numeric" class="input-field" id="inFatura1Tutar" value="896.000">
             </div>
             <div class="input-group">
@@ -225,7 +234,7 @@
             </div>
 
             <div class="input-group">
-                <div class="input-label">2. Maliyet Faturası (14 TL)</div>
+                <div class="input-label">2. Maliyet Faturası (TL)</div>
                 <input type="text" inputmode="numeric" class="input-field" id="inFatura2Tutar" value="784.000">
             </div>
             <div class="input-group">
@@ -234,7 +243,7 @@
             </div>
 
             <div class="input-group">
-                <div class="input-label">3. Maliyet Faturası (14 TL)</div>
+                <div class="input-label">3. Maliyet Faturası (TL)</div>
                 <input type="text" inputmode="numeric" class="input-field" id="inFatura3Tutar" value="784.000">
             </div>
             <div class="input-group">
@@ -243,6 +252,26 @@
             </div>
             
             <div class="input-group">
+                <div class="input-label">4. Maliyet Faturası (Yedek)</div>
+                <input type="text" inputmode="numeric" class="input-field" id="inFatura4Tutar" value="0">
+            </div>
+            <div class="input-group">
+                <div class="input-label">4. Fatura KDV Oranı (%)</div>
+                <input type="text" inputmode="numeric" class="input-field" id="inFatura4Kdv" value="20">
+            </div>
+
+            <div class="input-group">
+                <div class="input-label">5. Maliyet Faturası (Yedek)</div>
+                <input type="text" inputmode="numeric" class="input-field" id="inFatura5Tutar" value="0">
+            </div>
+            <div class="input-group">
+                <div class="input-label">5. Fatura KDV Oranı (%)</div>
+                <input type="text" inputmode="numeric" class="input-field" id="inFatura5Kdv" value="20">
+            </div>
+            
+            <div class="divider"></div>
+
+            <div class="input-group">
                 <div class="input-label">Diğer Gider 1 (TL)</div>
                 <input type="text" inputmode="numeric" class="input-field" id="inDigerGider1" value="0">
             </div>
@@ -250,6 +279,17 @@
                 <div class="input-label">Diğer Gider 2 (TL)</div>
                 <input type="text" inputmode="numeric" class="input-field" id="inDigerGider2" value="0">
             </div>
+            
+            <div class="input-group">
+                <div class="input-label">Diğer Gider 3 (TL)</div>
+                <input type="text" inputmode="numeric" class="input-field" id="inDigerGider3" value="0">
+            </div>
+            <div class="input-group">
+                <div class="input-label">Diğer Gider 4 (TL)</div>
+                <input type="text" inputmode="numeric" class="input-field" id="inDigerGider4" value="0">
+            </div>
+
+            <div class="divider"></div>
 
             <div class="input-group">
                 <div class="input-label">Kurumlar Vergisi Oranı (%)</div>
@@ -297,20 +337,34 @@
             const fatura3Tutar = getInputValue('inFatura3Tutar');
             const fatura3Kdv = getInputValue('inFatura3Kdv');
             
+            const fatura4Tutar = getInputValue('inFatura4Tutar');
+            const fatura4Kdv = getInputValue('inFatura4Kdv');
+            const fatura5Tutar = getInputValue('inFatura5Tutar');
+            const fatura5Kdv = getInputValue('inFatura5Kdv');
+            
             const digerGider1 = getInputValue('inDigerGider1');
             const digerGider2 = getInputValue('inDigerGider2');
+            const digerGider3 = getInputValue('inDigerGider3'); // Yeni eklenen
+            const digerGider4 = getInputValue('inDigerGider4'); // Yeni eklenen
             const vergiOrani = getInputValue('inVergiOrani');
 
             const toplamCiro = satisAdedi * satisFiyati;
-            const toplamNetMaliyet = fatura1Tutar + fatura2Tutar + fatura3Tutar + digerGider1 + digerGider2;
+            
+            // Tüm 5 fatura ve 4 diğer gider net maliyete ekleniyor
+            const toplamNetMaliyet = fatura1Tutar + fatura2Tutar + fatura3Tutar + fatura4Tutar + fatura5Tutar + 
+                                     digerGider1 + digerGider2 + digerGider3 + digerGider4;
+            
             const brutKar = toplamCiro - toplamNetMaliyet;
             const kurumlarVergisi = brutKar > 0 ? brutKar * (vergiOrani / 100) : 0;
             const netKar = brutKar - kurumlarVergisi;
 
             const tahsilEdilenKdv = toplamCiro * 0.20; 
+            
             const odenenKdv = (fatura1Tutar * (fatura1Kdv / 100)) + 
                               (fatura2Tutar * (fatura2Kdv / 100)) + 
-                              (fatura3Tutar * (fatura3Kdv / 100));
+                              (fatura3Tutar * (fatura3Kdv / 100)) +
+                              (fatura4Tutar * (fatura4Kdv / 100)) +
+                              (fatura5Tutar * (fatura5Kdv / 100));
             
             const netKdvFarki = tahsilEdilenKdv - odenenKdv;
 
